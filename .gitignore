@@ -1,0 +1,74 @@
+# Thirdparty Library source files
+/thirdparty/*
+!/thirdparty/CMakeLists.txt
+!/thirdparty/licences.txt
+
+tools/scompiler/glslang
+
+tags
+*.taghl
+
+.ycm_extra_conf*
+
+*.blend*
+!*.blend
+
+conanbuildinfo.cmake
+conaninfo.txt
+
+compile_commands.json
+
+__pycache__/
+
+build/
+
+proprietary/
+
+*.swp
+
+# Ide Generated files
+*.txt.user*
+.idea/
+
+# Generated Source files
+generated
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# pack-cpp
+.pack-cpp/
+
+#assimp
+dna.txt
+
+.vimrc_local.vim
+*.pyc
+
+.vs/
+CMakeSettings.json
