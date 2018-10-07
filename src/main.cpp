@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
         { ".frag_spv", bake_shader }
     };
 
-    boost::filesystem::path cache_dir{ vm["output"].as<std::string>() };
+    boost::filesystem::path cache_dir { vm["output"].as<std::string>() };
     boost::filesystem::create_directories(cache_dir);
 
     auto context = std::make_shared<sigma::context>(cache_dir);

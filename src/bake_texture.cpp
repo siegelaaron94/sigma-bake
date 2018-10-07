@@ -26,7 +26,7 @@ struct texture_settings {
 
 void to_json(json& j, const texture_settings& settings)
 {
-    j = nlohmann::json{
+    j = nlohmann::json {
         { "format", settings.format },
         { "filter", { { "minification", settings.minification }, { "magnification", settings.mipmap }, { "mipmap", settings.mipmap } } }
     };
