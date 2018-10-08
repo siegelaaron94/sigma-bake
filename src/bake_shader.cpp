@@ -30,23 +30,23 @@ void bake_shader(std::shared_ptr<sigma::context> context, const boost::filesyste
 
     auto source_type = source_types.at(source_path.extension().string());
     auto key = sigma::filesystem::make_relative(source_directory, source_path).replace_extension("");
-    auto cache = context->cache<sigma::graphics::shader>();
 
-    sigma::graphics::shader_schema schema;
+    // Load the SPIRV source code
     std::ifstream source { source_path.string() };
-
     std::vector<unsigned char> spirv;
     spirv.insert(spirv.end(),
         std::istreambuf_iterator<char> { source.rdbuf() },
         std::istreambuf_iterator<char> {});
 
+    // Read the SPIRV reflection data
+    sigma::graphics::shader_schema schema;
     auto reflect_path = source_path.string() + ".json";
     nlohmann::json j_reflection;
     std::ifstream file(reflect_path);
     file >> j_reflection;
-
     schema = j_reflection;
 
+    auto cache = context->cache<sigma::graphics::shader>();
     auto shader = std::make_shared<sigma::graphics::shader>(context, key);
     shader->add_source(source_type, std::move(spirv), std::move(schema));
     cache->insert(key, shader, true);

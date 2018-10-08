@@ -67,6 +67,7 @@ void load_texture(const boost::filesystem::path& source_path, Image& image)
         auto src_view = boost::gil::interleaved_view(width, height, pixels, width * 4 * sizeof(unsigned char));
         image = Image(width, height);
         boost::gil::copy_pixels(src_view, boost::gil::view(image));
+        stbi_image_free((char*)pixels);
     }
 }
 

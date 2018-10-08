@@ -13,6 +13,7 @@ namespace po = boost::program_options;
 
 void bake_texture(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
 void bake_shader(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
+void bake_material(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
 
 int main(int argc, char* argv[])
 {
@@ -57,7 +58,10 @@ int main(int argc, char* argv[])
         { ".tesc_spv", bake_shader },
         { ".tese_spv", bake_shader },
         { ".geom_spv", bake_shader },
-        { ".frag_spv", bake_shader }
+        { ".frag_spv", bake_shader },
+
+        // Materials
+        { ".smat", bake_material },
     };
 
     boost::filesystem::path cache_dir { vm["output"].as<std::string>() };
