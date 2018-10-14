@@ -14,6 +14,7 @@ namespace po = boost::program_options;
 void bake_texture(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
 void bake_shader(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
 void bake_material(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
+void bake_mesh(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
 
 int main(int argc, char* argv[])
 {
@@ -62,6 +63,44 @@ int main(int argc, char* argv[])
 
         // Materials
         { ".smat", bake_material },
+
+        // Static Meshes
+        { ".3ds", bake_mesh },
+        { ".dae", bake_mesh },
+        { ".fbx", bake_mesh },
+        { ".ifc-step", bake_mesh },
+        { ".ase", bake_mesh },
+        { ".dxf", bake_mesh },
+        { ".hmp", bake_mesh },
+        { ".md2", bake_mesh },
+        { ".md3", bake_mesh },
+        { ".md5", bake_mesh },
+        { ".mdc", bake_mesh },
+        { ".mdl", bake_mesh },
+        { ".nff", bake_mesh },
+        { ".ply", bake_mesh },
+        { ".stl", bake_mesh },
+        { ".x", bake_mesh },
+        { ".obj", bake_mesh },
+        { ".opengex", bake_mesh },
+        { ".smd", bake_mesh },
+        { ".lwo", bake_mesh },
+        { ".lxo", bake_mesh },
+        { ".lws", bake_mesh },
+        { ".ter", bake_mesh },
+        { ".ac3d", bake_mesh },
+        { ".ms3d", bake_mesh },
+        { ".cob", bake_mesh },
+        { ".q3bsp", bake_mesh },
+        { ".xgl", bake_mesh },
+        { ".csm", bake_mesh },
+        { ".bvh", bake_mesh },
+        { ".b3d", bake_mesh },
+        { ".ndo", bake_mesh },
+        { ".q3d", bake_mesh },
+        { ".gltf", bake_mesh },
+        { ".3mf", bake_mesh },
+        { ".blend", bake_mesh }
     };
 
     boost::filesystem::path cache_dir { vm["output"].as<std::string>() };

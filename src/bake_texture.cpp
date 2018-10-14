@@ -10,48 +10,78 @@
 
 #include <nlohmann/json.hpp>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/gil/image.hpp>
 
-#include <iostream>
-
-using nlohmann::json;
-
-struct texture_settings {
-    sigma::graphics::texture_format format = sigma::graphics::texture_format::RGB8;
-    sigma::graphics::texture_filter minification = sigma::graphics::texture_filter::LINEAR;
-    sigma::graphics::texture_filter magnification = sigma::graphics::texture_filter::LINEAR;
-    sigma::graphics::texture_filter mipmap = sigma::graphics::texture_filter::LINEAR;
-};
-
-void to_json(json& j, const texture_settings& settings)
-{
-    j = nlohmann::json {
-        { "format", settings.format },
-        { "filter", { { "minification", settings.minification }, { "magnification", settings.mipmap }, { "mipmap", settings.mipmap } } }
+namespace sigma {
+namespace graphics {
+    struct texture_settings {
+        texture_format format = texture_format::RGB8;
+        texture_filter minification = texture_filter::LINEAR;
+        texture_filter magnification = texture_filter::LINEAR;
+        texture_filter mipmap = texture_filter::LINEAR;
     };
-}
 
-void from_json(const json& j, texture_settings& settings)
-{
-    auto format_j = j.find("format");
-    if (format_j != j.end())
-        settings.format = *format_j;
+    void from_json(const nlohmann::json& j, texture_filter& flt)
+    {
+        static std::map<std::string, texture_filter> filter_map = {
+            { "NEAREST", texture_filter::NEAREST },
+            { "LINEAR", texture_filter::LINEAR },
+            { "NONE", texture_filter::NONE }
+        };
 
-    auto filter_j = j.find("filter");
-    if (filter_j != j.end()) {
-        auto min_j = filter_j->find("minification");
-        if (min_j != filter_j->end())
-            settings.minification = *min_j;
+        auto str_val = boost::to_upper_copy(j.get<std::string>());
+        auto it = filter_map.find(str_val);
 
-        auto mag_j = filter_j->find("magnification");
-        if (mag_j != filter_j->end())
-            settings.magnification = *mag_j;
-
-        auto mip_j = filter_j->find("mipmap");
-        if (mip_j != filter_j->end())
-            settings.mipmap = *mip_j;
+        if (it != filter_map.end())
+            flt = it->second;
+        else
+            flt = texture_filter::LINEAR;
     }
+
+    void from_json(const nlohmann::json& j, texture_format& fmt)
+    {
+        static std::map<std::string, texture_format> format_map = {
+            { "RGB8", texture_format::RGB8 },
+            { "RGBA8", texture_format::RGBA8 },
+            { "RGB16F", texture_format::RGB16F },
+            { "RGBA16F", texture_format::RGBA16F },
+            { "RGB32F", texture_format::RGB32F },
+            { "DEPTH32F_STENCIL8", texture_format::DEPTH32F_STENCIL8 }
+        };
+
+        auto str_val = boost::to_upper_copy(j.get<std::string>());
+        auto it = format_map.find(str_val);
+
+        if (it != format_map.end())
+            fmt = it->second;
+        else
+            fmt = texture_format::RGB8;
+    }
+
+    void from_json(const nlohmann::json& j, texture_settings& settings)
+    {
+        auto format_j = j.find("format");
+        if (format_j != j.end())
+            settings.format = *format_j;
+
+        auto filter_j = j.find("filter");
+        if (filter_j != j.end()) {
+            auto min_j = filter_j->find("minification");
+            if (min_j != filter_j->end())
+                settings.minification = *min_j;
+
+            auto mag_j = filter_j->find("magnification");
+            if (mag_j != filter_j->end())
+                settings.magnification = *mag_j;
+
+            auto mip_j = filter_j->find("mipmap");
+            if (mip_j != filter_j->end())
+                settings.mipmap = *mip_j;
+        }
+    }
+}
 }
 
 template <class Image>
@@ -78,7 +108,7 @@ void bake_texture(std::shared_ptr<sigma::context> context, const boost::filesyst
 
     auto cache = context->cache<sigma::graphics::texture>();
 
-    texture_settings settings;
+    sigma::graphics::texture_settings settings;
     if (boost::filesystem::exists(settings_path)) {
         nlohmann::json j_settings;
         std::ifstream file(settings_path.string());
