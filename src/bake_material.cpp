@@ -24,8 +24,7 @@ void bake_material(std::shared_ptr<sigma::context> context, const boost::filesys
     from_json(j_material, *material);
 
     for (auto buffer : material->buffers()) {
-        if (buffer)
-            buffer_cache->insert(buffer->key(), buffer, true);
+        buffer_cache->write_to_disk(buffer.second->key());
     }
 
     material_cache->insert(key, material, true);
