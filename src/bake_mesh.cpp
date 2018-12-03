@@ -10,8 +10,8 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 
+#include <filesystem>
 #include <fstream>
 
 glm::vec3 convert_color(aiColor3D c)
@@ -34,7 +34,7 @@ glm::vec2 convert_2d(aiVector3D v)
     return glm::vec2(v.x, v.y);
 }
 
-std::string get_name(const aiMaterial* mat, const boost::filesystem::path& source_directory)
+std::string get_name(const aiMaterial* mat, const std::filesystem::path& source_directory)
 {
     aiString matName;
     mat->Get(AI_MATKEY_NAME, matName);
@@ -68,7 +68,7 @@ std::string get_name(const aiNode* node)
 
 void convert_static_mesh(
     std::shared_ptr<sigma::context> context,
-    const boost::filesystem::path& source_directory,
+    const std::filesystem::path& source_directory,
     const aiScene* scene,
     const aiMesh* src_mesh,
     std::shared_ptr<sigma::graphics::static_mesh> dest_mesh)
@@ -117,7 +117,7 @@ void convert_static_mesh(
     dest_mesh->set_radius(radius);
 }
 
-void bake_mesh(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path)
+void bake_mesh(std::shared_ptr<sigma::context> context, const std::filesystem::path& source_directory, const std::filesystem::path& source_path)
 {
     std::string source_str = source_path.string();
     auto key = sigma::filesystem::make_relative(source_directory, source_path).replace_extension("");

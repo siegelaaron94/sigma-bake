@@ -1,9 +1,9 @@
 #include <sigma/context.hpp>
 #include <sigma/util/filesystem.hpp>
 
-#include <boost/filesystem/operations.hpp>
 #include <boost/program_options.hpp>
 
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -11,17 +11,17 @@
 
 namespace po = boost::program_options;
 
-void bake_texture(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
-void bake_shader(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
-void bake_material(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
-void bake_mesh(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path);
+void bake_texture(std::shared_ptr<sigma::context> context, const std::filesystem::path& source_directory, const std::filesystem::path& source_path);
+void bake_shader(std::shared_ptr<sigma::context> context, const std::filesystem::path& source_directory, const std::filesystem::path& source_path);
+void bake_material(std::shared_ptr<sigma::context> context, const std::filesystem::path& source_directory, const std::filesystem::path& source_path);
+void bake_mesh(std::shared_ptr<sigma::context> context, const std::filesystem::path& source_directory, const std::filesystem::path& source_path);
 
 int main(int argc, char* argv[])
 {
     po::options_description global_options("Options");
     // clang-format off
     global_options.add_options()("help,h", "Show this help message")
-    ("output,o", po::value<std::string>()->default_value((boost::filesystem::current_path()).string()), "output directory")
+    ("output,o", po::value<std::string>()->default_value((std::filesystem::current_path()).string()), "output directory")
     ("input-files", po::value<std::vector<std::string>>(), "input resource files");
     // clang-format on
 
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    std::unordered_map<std::string, void (*)(std::shared_ptr<sigma::context>, const boost::filesystem::path&, const boost::filesystem::path&)> bakers = {
+    std::unordered_map<std::string, void (*)(std::shared_ptr<sigma::context>, const std::filesystem::path&, const std::filesystem::path&)> bakers = {
         // Textures
         { ".tiff", bake_texture },
         { ".tif", bake_texture },
@@ -103,15 +103,15 @@ int main(int argc, char* argv[])
         { ".blend", bake_mesh }
     };
 
-    boost::filesystem::path cache_dir { vm["output"].as<std::string>() };
-    boost::filesystem::create_directories(cache_dir);
+    std::filesystem::path cache_dir { vm["output"].as<std::string>() };
+    std::filesystem::create_directories(cache_dir);
 
     auto context = std::make_shared<sigma::context>(cache_dir);
 
-    auto source_directory = boost::filesystem::current_path();
+    auto source_directory = std::filesystem::current_path();
     for (const auto& src : vm["input-files"].as<std::vector<std::string>>()) {
-        auto src_path = boost::filesystem::absolute(src);
-        if (sigma::filesystem::contains_file(source_directory, src_path) && boost::filesystem::exists(src_path)) {
+        auto src_path = std::filesystem::absolute(src);
+        if (sigma::filesystem::contains_file(source_directory, src_path) && std::filesystem::exists(src_path)) {
             auto ext = src_path.extension().string();
             if (bakers.count(ext)) {
                 bakers[ext](context, source_directory, src_path);
@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
                 return -1;
             }
         } else {
-            std::cerr << "sigma-bake: error: File '" << src << "' is not contained in '" << boost::filesystem::current_path() << "'!\n";
+            std::cerr << "sigma-bake: error: File '" << src << "' is not contained in '" << std::filesystem::current_path() << "'!\n";
             return -1;
         }
     }

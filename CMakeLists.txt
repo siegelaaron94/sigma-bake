@@ -20,7 +20,7 @@ PRIVATE
     sigma-core
 	stb::stb
     Boost::system
-    Boost::filesystem
+    std::filesystem
     Boost::program_options
 	nlohmann_json::nlohmann_json
 	Assimp::assimp

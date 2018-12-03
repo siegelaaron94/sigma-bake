@@ -11,8 +11,9 @@
 #include <nlohmann/json.hpp>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/gil/image.hpp>
+
+#include <filesystem>
 
 namespace sigma {
 namespace graphics {
@@ -85,7 +86,7 @@ namespace graphics {
 }
 
 template <class Image>
-void load_texture(const boost::filesystem::path& source_path, Image& image)
+void load_texture(const std::filesystem::path& source_path, Image& image)
 {
     auto file_path_string = source_path.string();
 
@@ -101,7 +102,7 @@ void load_texture(const boost::filesystem::path& source_path, Image& image)
     }
 }
 
-void bake_texture(std::shared_ptr<sigma::context> context, const boost::filesystem::path& source_directory, const boost::filesystem::path& source_path)
+void bake_texture(std::shared_ptr<sigma::context> context, const std::filesystem::path& source_directory, const std::filesystem::path& source_path)
 {
     auto key = sigma::filesystem::make_relative(source_directory, source_path).replace_extension("");
     auto settings_path = source_path.parent_path() / (source_path.stem().string() + ".stex");
@@ -109,7 +110,7 @@ void bake_texture(std::shared_ptr<sigma::context> context, const boost::filesyst
     auto cache = context->cache<sigma::graphics::texture>();
 
     sigma::graphics::texture_settings settings;
-    if (boost::filesystem::exists(settings_path)) {
+    if (std::filesystem::exists(settings_path)) {
         nlohmann::json j_settings;
         std::ifstream file(settings_path.string());
         file >> j_settings;
