@@ -2,6 +2,7 @@
 #include <sigma/graphics/static_mesh.hpp>
 #include <sigma/resource/cache.hpp>
 #include <sigma/util/filesystem.hpp>
+#include <sigma/util/string.hpp>
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -9,10 +10,10 @@
 
 #include <glm/gtc/quaternion.hpp>
 
-#include <boost/algorithm/string.hpp>
-
 #include <filesystem>
 #include <fstream>
+
+using namespace std::literals::string_literals;
 
 glm::vec3 convert_color(aiColor3D c)
 {
@@ -43,7 +44,7 @@ std::string get_name(const aiMaterial* mat, const std::filesystem::path& source_
     if (name == "DefaultMaterial")
         return "default";
 
-    if (boost::starts_with(name, "//"))
+    if (sigma::util::starts_with(name, "//"s))
         return (source_directory / name.substr(2)).string();
     if (name[0] == '/')
         return name.substr(1);
@@ -163,7 +164,7 @@ void bake_mesh(std::shared_ptr<sigma::context> context, const std::filesystem::p
 
     auto dest_mesh = std::make_shared<sigma::graphics::static_mesh>(context, key);
     for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
-        if (boost::ends_with(get_name(scene->mMeshes[i]), "_high"))
+        if (sigma::util::ends_with(get_name(scene->mMeshes[i]), "_high"s))
             continue;
         convert_static_mesh(context, key.parent_path(), scene, scene->mMeshes[i], dest_mesh);
     }
@@ -171,6 +172,5 @@ void bake_mesh(std::shared_ptr<sigma::context> context, const std::filesystem::p
     dest_mesh->triangles().shrink_to_fit();
     dest_mesh->parts().shrink_to_fit();
 
-    std::cout << key << std::endl;
     mesh_cache->insert(key, dest_mesh, true);
 }
