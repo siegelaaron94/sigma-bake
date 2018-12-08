@@ -20,5 +20,5 @@ PRIVATE
     sigma-core
     stb::stb
     nlohmann_json::nlohmann_json
-    Assimp::assimp
+    assimp
 )
