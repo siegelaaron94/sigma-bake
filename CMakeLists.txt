@@ -18,7 +18,7 @@ PRIVATE
 target_link_libraries(sigma-bake
 PRIVATE
     sigma-core
-    stb::stb
+    stb::stb_image
     nlohmann_json::nlohmann_json
-    assimp
+    assimp::assimp
 )
