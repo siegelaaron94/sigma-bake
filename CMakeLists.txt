@@ -8,6 +8,7 @@ add_executable(sigma-bake
     src/bake_texture.cpp
     src/main.cpp
     src/glm_json.cpp
+    src/glm_json.hpp
 )
 
 target_include_directories(sigma-bake
