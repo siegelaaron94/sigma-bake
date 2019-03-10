@@ -1,5 +1,5 @@
-find_program(GLSLC_COMMAND glslc REQUIRED)
-find_program(SPIRV_CROSS_COMMAND spirv-cross REQUIRED)
+find_program(GLSLC_COMMAND glslc)
+find_program(SPIRV_CROSS_COMMAND spirv-cross)
 
 function(list_filter_extension LIST_VAR)
     list(GET ARGN 0 FLITER_REGEX)
